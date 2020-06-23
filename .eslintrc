@@ -1,0 +1,15 @@
+{
+    "extends": [
+      "react-app",
+      "airbnb",
+    ],
+    "plugins": [
+      "jsx-a11y",
+      "prettier"
+    ],
+    "rules": {
+      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+      "jsx-quotes": ["error", "prefer-single"],
+      "comma-dangle": ["error", "always-multiline"],
+    }
+  }
