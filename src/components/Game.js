@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 
-
 // Components
 import WinModal from './WinModal';
 import GameBoard from './GameBoard';
@@ -20,25 +19,19 @@ export default function Game() {
   const [moves, setMoves] = useState(0);
   const [gameData, setGameData] = useState(initialBoard);
   const [hasWon, setHasWon] = useState(false);
-
-  const handleStart = () => {
-    setHasWon(false);
-    const newBoard = initialBoard.map((row) => (
-      row.map(() => (
-        Math.round(Math.random())
-      ))
-    ));
-    setGameData(newBoard);
-    setPlaying(true);
-    setMoves(0);
-  };
+  const [boardMemory, setBoardMemory] = useState([]);
 
   const handleWin = () => {
-    console.log('you win');
+    setHasWon(true);
   };
 
-  const toggleTiles = (row, col) => {
-    const updatedBoard = cloneDeep(gameData);
+  const toggleTiles = (row, col, create = false, tempBoard = null, count = 0) => {
+    let updatedBoard;
+    if (create) {
+      updatedBoard = tempBoard;
+    } else {
+      updatedBoard = cloneDeep(gameData);
+    }
     updatedBoard[row][col] = (updatedBoard[row][col] + 1) % 2;
     if (col - 1 >= 0) {
       updatedBoard[row][col - 1] = (updatedBoard[row][col - 1] + 1) % 2;
@@ -52,7 +45,24 @@ export default function Game() {
     if (row - 1 >= 0) {
       updatedBoard[row - 1][col] = (updatedBoard[row - 1][col] + 1) % 2;
     }
+    if (create && count < 20) {
+      const newRow = Math.floor(Math.random() * 5);
+      const newCol = Math.floor(Math.random() * 5);
+      setBoardMemory([...boardMemory, [newRow, newCol]]);
+      return toggleTiles(newRow, newCol, true, updatedBoard, count + 1);
+    }
     return updatedBoard;
+  };
+
+  const handleStart = () => {
+    setHasWon(false);
+    const row = Math.floor(Math.random() * 5);
+    const col = Math.floor(Math.random() * 5);
+    setBoardMemory([[row, col]]);
+    setMoves(0);
+    const newBoard = toggleTiles(row, col, true, cloneDeep(initialBoard));
+    setGameData(newBoard);
+    setPlaying(true);
   };
 
   const handleTileClick = (row, col) => {
@@ -60,6 +70,7 @@ export default function Game() {
       setGameData(toggleTiles(row, col));
       setMoves(moves + 1);
       if (isEqual(gameData, initialBoard)) {
+        setPlaying(false);
         handleWin();
       }
     }
