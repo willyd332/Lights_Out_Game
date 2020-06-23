@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import cloneDeep from 'lodash/cloneDeep';
+import isEqual from 'lodash/isEqual';
+
 
 // Components
 import WinModal from './WinModal';
@@ -35,7 +38,7 @@ export default function Game() {
   };
 
   const toggleTiles = (row, col) => {
-    const updatedBoard = JSON.parse(JSON.stringify(gameData));
+    const updatedBoard = cloneDeep(gameData);
     updatedBoard[row][col] = (updatedBoard[row][col] + 1) % 2;
     if (col - 1 >= 0) {
       updatedBoard[row][col - 1] = (updatedBoard[row][col - 1] + 1) % 2;
@@ -56,7 +59,7 @@ export default function Game() {
     if (playing) {
       setGameData(toggleTiles(row, col));
       setMoves(moves + 1);
-      if (gameData === initialBoard) {
+      if (isEqual(gameData, initialBoard)) {
         handleWin();
       }
     }
