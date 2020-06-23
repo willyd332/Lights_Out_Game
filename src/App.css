@@ -1,18 +1,17 @@
-
-
-
-
 .gameBoard {
-    width: 500px;
-    height: 500px;
+    width: 700px;
+    height: 700px;
+    background: no-repeat center url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA44QC94ng9jfrnG67qZ1x3uG_oATE2deDug&usqp=CAU);
+    background-size: cover;
 }
 
 .tile {
-    float: left;
     display: inline-block;
     width: 98px;
     height: 98px;
     border: 1px solid;
+    border-radius: 100%;
+    margin: 20px;
 }
 
 .tile:focus {
@@ -25,8 +24,8 @@
 }
 
 .litTile {
-    background-color: chartreuse;
-    color: chartreuse;
+    background-color: white;
+    color: white;
 }
 
 .unlitTile {
