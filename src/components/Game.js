@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 
@@ -65,30 +65,50 @@ export default function Game() {
     setPlaying(true);
   };
 
-  const handleTileClick = (row, col) => {
+  const handleTileClick = async (row, col) => {
     if (playing) {
       setGameData(toggleTiles(row, col));
       setMoves(moves + 1);
-      if (isEqual(gameData, initialBoard)) {
-        setPlaying(false);
-        handleWin();
-      }
     }
   };
+
+  useEffect(() => {
+    if (isEqual(gameData, initialBoard) && playing) {
+      setPlaying(false);
+      handleWin();
+    }
+  }, [gameData, playing]);
 
   return (
     <div>
       <h2>
-        {moves}
+        {`${moves} `}
+        Moves
       </h2>
       <WinModal hasWon={hasWon} handleRestart={handleStart} />
       <GameBoard
         handleTileClick={handleTileClick}
         gameData={gameData}
       />
-      <button type='button' onClick={() => { handleStart(); }}>
-        {playing ? 'Restart' : 'Start'}
-      </button>
+      {playing
+        ? (
+          <button
+            type='button'
+            className='gameButton'
+            onClick={() => { handleStart(); }}
+          >
+            Give Up?
+          </button>
+        )
+        : (
+          <button
+            type='button'
+            className='gameButton'
+            onClick={() => { handleStart(); }}
+          >
+            {playing ? 'Restart' : 'Start'}
+          </button>
+        )}
     </div>
   );
 }
