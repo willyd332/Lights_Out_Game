@@ -26,6 +26,7 @@ export default function Game() {
     ));
     setGameData(newBoard);
     setPlaying(true);
+    setMoves(0);
   };
 
   const handleWin = () => {
@@ -93,7 +94,7 @@ export default function Game() {
         gameData={gameData}
       />
       <button type='button' onClick={() => { handleStart(); }}>
-        Start Game
+        {playing ? 'Restart' : 'Start'}
       </button>
     </div>
   );
