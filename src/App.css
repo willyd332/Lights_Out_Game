@@ -1,1 +1,35 @@
 
+
+
+
+.gameBoard {
+    width: 500px;
+    height: 500px;
+}
+
+.tile {
+    float: left;
+    display: inline-block;
+    width: 98px;
+    height: 98px;
+    border: 1px solid;
+}
+
+.tile:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+.tile:hover {
+    border: 1px solid red;
+}
+
+.litTile {
+    background-color: chartreuse;
+    color: chartreuse;
+}
+
+.unlitTile {
+    background-color: black;
+    color: black;
+}
