@@ -25,7 +25,7 @@ export default function Game() {
     setHasWon(true);
   };
 
-  const toggleTiles = (row, col, create = false, tempBoard = null, count = 0) => {
+  const toggleTiles = (row, col, create = false, tempBoard = null, memory = [], count = 0) => {
     let updatedBoard;
     if (create) {
       updatedBoard = tempBoard;
@@ -45,11 +45,13 @@ export default function Game() {
     if (row - 1 >= 0) {
       updatedBoard[row - 1][col] = (updatedBoard[row - 1][col] + 1) % 2;
     }
-    if (create && count < 20) {
+    if (create && count < ((Math.random() * 15) + 5)) {
       const newRow = Math.floor(Math.random() * 5);
       const newCol = Math.floor(Math.random() * 5);
-      setBoardMemory([...boardMemory, [newRow, newCol]]);
-      return toggleTiles(newRow, newCol, true, updatedBoard, count + 1);
+      const newMemory = [...memory, [newRow, newCol]];
+      return toggleTiles(newRow, newCol, true, updatedBoard, newMemory, count + 1);
+    } if (create) {
+      setBoardMemory(memory);
     }
     return updatedBoard;
   };
@@ -58,17 +60,30 @@ export default function Game() {
     setHasWon(false);
     const row = Math.floor(Math.random() * 5);
     const col = Math.floor(Math.random() * 5);
-    setBoardMemory([[row, col]]);
     setMoves(0);
-    const newBoard = toggleTiles(row, col, true, cloneDeep(initialBoard));
+    const newBoard = toggleTiles(row, col, true, cloneDeep(initialBoard), [[row, col]]);
     setGameData(newBoard);
     setPlaying(true);
   };
 
-  const handleTileClick = async (row, col) => {
+  const handleTileClick = (row, col, hint = false) => {
     if (playing) {
       setGameData(toggleTiles(row, col));
       setMoves(moves + 1);
+      if (!hint) {
+        setBoardMemory([...boardMemory, [row, col]]);
+      }
+    }
+  };
+
+  const handleHint = () => {
+    if (boardMemory.length > 1) {
+      const newBoardMemory = cloneDeep(boardMemory);
+      setBoardMemory(newBoardMemory);
+      const lastMove = newBoardMemory.pop();
+      handleTileClick(lastMove[0], lastMove[1], true);
+    } else {
+      handleTileClick(boardMemory[0][0], boardMemory[0][1], true);
     }
   };
 
@@ -95,9 +110,9 @@ export default function Game() {
           <button
             type='button'
             className='gameButton'
-            onClick={() => { handleStart(); }}
+            onClick={() => { handleHint(); }}
           >
-            Give Up?
+            Need A Hint?
           </button>
         )
         : (
