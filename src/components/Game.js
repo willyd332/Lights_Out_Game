@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
-import PropTypes from 'prop-types';
-
 // Components
+import WinModal from './WinModal';
 import GameBoard from './GameBoard';
 
 const initialBoard = [
@@ -17,8 +16,10 @@ export default function Game() {
   const [playing, setPlaying] = useState(false);
   const [moves, setMoves] = useState(0);
   const [gameData, setGameData] = useState(initialBoard);
+  const [hasWon, setHasWon] = useState(false);
 
   const handleStart = () => {
+    setHasWon(false);
     const newBoard = initialBoard.map((row) => (
       row.map(() => (
         Math.round(Math.random())
@@ -33,50 +34,27 @@ export default function Game() {
     console.log('you win');
   };
 
+  const toggleTiles = (row, col) => {
+    const updatedBoard = JSON.parse(JSON.stringify(gameData));
+    updatedBoard[row][col] = (updatedBoard[row][col] + 1) % 2;
+    if (col - 1 >= 0) {
+      updatedBoard[row][col - 1] = (updatedBoard[row][col - 1] + 1) % 2;
+    }
+    if (col + 1 <= 4) {
+      updatedBoard[row][col + 1] = (updatedBoard[row][col + 1] + 1) % 2;
+    }
+    if (row + 1 <= 4) {
+      updatedBoard[row + 1][col] = (updatedBoard[row + 1][col] + 1) % 2;
+    }
+    if (row - 1 >= 0) {
+      updatedBoard[row - 1][col] = (updatedBoard[row - 1][col] + 1) % 2;
+    }
+    return updatedBoard;
+  };
+
   const handleTileClick = (row, col) => {
     if (playing) {
-      const updatedBoard = gameData;
-
-      const toggle = (dir) => {
-        updatedBoard[row][col] = (updatedBoard[row][col] + 1) % 2;
-        if (dir.includes('left')) {
-          updatedBoard[row][col - 1] = (updatedBoard[row][col - 1] + 1) % 2;
-        }
-        if (dir.includes('right')) {
-          updatedBoard[row][col + 1] = (updatedBoard[row][col + 1] + 1) % 2;
-        }
-        if (dir.includes('below')) {
-          updatedBoard[row + 1][col] = (updatedBoard[row + 1][col] + 1) % 2;
-        }
-        if (dir.includes('above')) {
-          updatedBoard[row - 1][col] = (updatedBoard[row - 1][col] + 1) % 2;
-        }
-      };
-
-      if (row === 0) {
-        if (col === 0) {
-          toggle(['right', 'below']);
-        } else if (col === 4) {
-          toggle(['left', 'below']);
-        } else {
-          toggle(['left', 'right', 'below']);
-        }
-      } else if (row === 4) {
-        if (col === 0) {
-          toggle(['right', 'above']);
-        } else if (col === 4) {
-          toggle(['left', 'above']);
-        } else {
-          toggle(['left', 'right', 'above']);
-        }
-      } else if (col === 0) {
-        toggle(['right', 'above', 'below']);
-      } else if (col === 4) {
-        toggle(['left', 'above', 'below']);
-      } else {
-        toggle(['left', 'right', 'above', 'below']);
-      }
-      setGameData(updatedBoard);
+      setGameData(toggleTiles(row, col));
       setMoves(moves + 1);
       if (gameData === initialBoard) {
         handleWin();
@@ -89,6 +67,7 @@ export default function Game() {
       <h2>
         {moves}
       </h2>
+      <WinModal hasWon={hasWon} handleRestart={handleStart} />
       <GameBoard
         handleTileClick={handleTileClick}
         gameData={gameData}
@@ -99,6 +78,3 @@ export default function Game() {
     </div>
   );
 }
-
-Game.propTypes = {
-};

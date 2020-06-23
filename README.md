@@ -5,3 +5,4 @@
 
 ## Development
 `npm start`
+> Running on http://localhost:3000
