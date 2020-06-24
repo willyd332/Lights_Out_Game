@@ -9,31 +9,34 @@
     display: inline-block;
     width: 98px;
     height: 98px;
-    border: 1px solid;
+    border: none;
     border-radius: 100%;
     margin: 20px;
     text-indent: 150%;
     overflow: hidden;
     white-space: nowrap;
+    background-size: contain;
+    box-shadow: 5px 6px 47px -12px rgba(0,0,0,0.75);
+    transition: box-shadow .1s ease;
 }
 
 .tile:focus {
     outline: none;
-    box-shadow: none;
   }
 
 .tile:hover {
-    border: 1px solid red;
+    box-shadow: 5px 6px 41px 0px rgba(0,0,0,1);
+    transition: box-shadow .3s ease-in;
 }
 
 .litTile {
-    background-color: white;
-    color: white;
+    background: url('./imgs/white.png') center no-repeat;
+    background-size: contain;
 }
 
 .unlitTile {
-    background-color: black;
-    color: black;
+    background: url('./imgs/black.png') center no-repeat;
+    background-size: contain;
 }
 
 .winModalHidden {
