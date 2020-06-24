@@ -25,7 +25,7 @@ export default function Game() {
     setHasWon(true);
   };
 
-  const toggleTiles = (row, col, create = false, tempBoard = null, memory = [], count = 0) => {
+  const toggleTiles = (row, col, create = false, tempBoard, memory, count = 0) => {
     let updatedBoard;
     if (create) {
       updatedBoard = tempBoard;
@@ -48,7 +48,7 @@ export default function Game() {
     if (create && count < ((Math.random() * 15) + 5)) {
       const newRow = Math.floor(Math.random() * 5);
       const newCol = Math.floor(Math.random() * 5);
-      const newMemory = [...memory, [newRow, newCol]];
+      const newMemory = [...memory, [newRow, newCol, false]];
       return toggleTiles(newRow, newCol, true, updatedBoard, newMemory, count + 1);
     } if (create) {
       setBoardMemory(memory);
@@ -61,7 +61,7 @@ export default function Game() {
     const row = Math.floor(Math.random() * 5);
     const col = Math.floor(Math.random() * 5);
     setMoves(0);
-    const newBoard = toggleTiles(row, col, true, cloneDeep(initialBoard), [[row, col]]);
+    const newBoard = toggleTiles(row, col, true, cloneDeep(initialBoard), [[row, col, false]]);
     setGameData(newBoard);
     setPlaying(true);
   };
@@ -71,7 +71,7 @@ export default function Game() {
       setGameData(toggleTiles(row, col));
       setMoves(moves + 1);
       if (!hint) {
-        setBoardMemory([...boardMemory, [row, col]]);
+        setBoardMemory([...boardMemory, [row, col, true]]);
       }
     }
   };
@@ -97,7 +97,8 @@ export default function Game() {
   return (
     <div>
       <h2>
-        {`${moves} `}
+        {moves}
+        {' '}
         Moves
       </h2>
       <WinModal hasWon={hasWon} handleRestart={handleStart} />
@@ -110,7 +111,7 @@ export default function Game() {
           <button
             type='button'
             className='gameButton'
-            onClick={() => { handleHint(); }}
+            onClick={handleHint}
           >
             Need A Hint?
           </button>
@@ -119,9 +120,9 @@ export default function Game() {
           <button
             type='button'
             className='gameButton'
-            onClick={() => { handleStart(); }}
+            onClick={handleStart}
           >
-            {playing ? 'Restart' : 'Start'}
+            Start
           </button>
         )}
     </div>
