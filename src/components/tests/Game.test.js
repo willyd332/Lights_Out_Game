@@ -3,6 +3,8 @@ import { fireEvent, render } from '@testing-library/react';
 // import util from 'util';
 import Game from '../Game';
 
+const TEST_MEM = [[0, 0], [2, 2], [4, 4], [3, 1], [1, 3]];
+
 jest.mock('../scripts/setupBoard', () => (
   () => (
     {
@@ -18,14 +20,23 @@ jest.mock('../scripts/setupBoard', () => (
   )
 ));
 
-/*
-what to test? priorities, probably:
-that the correct tiles are toggled initially
-that the correct tiles are toggled when you click a tile
-that the game can be completed
-that the game can be restarted
-that the autosolver, when clicked enough times, will win the game
-*/
+const testInitTiles = (game) => {
+  for (let x = 0; x < 5; x += 1) {
+    for (let y = 0; y < 5; y += 1) {
+      if (
+        (y === 0 && (x === 0 || x === 1 || x === 3))
+        || (y === 1 && (x === 0 || x === 3 || x === 4))
+        || (y === 2 && x === 2)
+        || (y === 3 && (x === 0 || x === 1 || x === 4))
+        || (y === 4 && (x === 1 || x === 3 || x === 4))
+      ) {
+        expect(game.getByTestId(`${x}-${y}`)).toHaveTextContent('lit');
+      } else {
+        expect(game.getByTestId(`${x}-${y}`)).toHaveTextContent('unlit');
+      }
+    }
+  }
+};
 
 describe('Game', () => {
   let game;
@@ -49,21 +60,41 @@ describe('Game', () => {
     });
 
     it('Test If Correct Tiles Are Lit', () => {
-      for (let x = 0; x < 5; x += 1) {
-        for (let y = 0; y < 5; y += 1) {
-          if (
-            (y === 0 && (x === 0 || x === 1 || x === 3))
-            || (y === 1 && (x === 0 || x === 3 || x === 4))
-            || (y === 2 && x === 2)
-            || (y === 3 && (x === 0 || x === 1 || x === 4))
-            || (y === 4 && (x === 1 || x === 3 || x === 4))
-          ) {
-            expect(game.getByTestId(`${x}-${y}`)).toHaveTextContent('lit');
-          } else {
-            expect(game.getByTestId(`${x}-${y}`)).toHaveTextContent('unlit');
-          }
-        }
+      testInitTiles(game);
+    });
+
+    it('Test If Correct Tiles Toggle On Click', () => {
+      fireEvent.click(game.getByTestId(`${0}-${1}`));
+      expect(game.getByTestId(`${0}-${1}`)).toHaveTextContent('lit');
+      expect(game.getByTestId(`${0}-${0}`)).toHaveTextContent('unlit');
+      expect(game.getByTestId(`${0}-${2}`)).toHaveTextContent('lit');
+      expect(game.getByTestId(`${1}-${1}`)).toHaveTextContent('lit');
+    });
+
+    it('Test If Hint Button Works', () => {
+      fireEvent.click(game.getByTestId(`${0}-${1}`));
+      for (let i = 0; i < TEST_MEM.length; i += 1) {
+        fireEvent.click(game.getByTestId('hintBtn'));
       }
+      expect(game.getByTestId(`${0}-${0}`)).toHaveTextContent('lit');
+      expect(game.getByTestId(`${0}-${1}`)).toHaveTextContent('lit');
+      expect(game.getByTestId(`${1}-${0}`)).toHaveTextContent('lit');
+    });
+
+    it('Test If Game Can Be Completed', () => {
+      expect(game.getByTestId('winModal')).toHaveClass('winModalHidden');
+      for (let i = 0; i < TEST_MEM.length; i += 1) {
+        fireEvent.click(game.getByTestId('hintBtn'));
+      }
+      expect(game.getByTestId('winModal')).toHaveClass('winModal');
+    });
+
+    it('Test If Game Can Be Restarted', () => {
+      for (let i = 0; i < TEST_MEM.length; i += 1) {
+        fireEvent.click(game.getByTestId('hintBtn'));
+      }
+      fireEvent.click(game.getByTestId('restartBtn'));
+      testInitTiles(game);
     });
   });
 });
