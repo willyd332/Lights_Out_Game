@@ -1,4 +1,5 @@
 import React from 'react';
+import uniqid from 'uniqid';
 
 import PropTypes from 'prop-types';
 
@@ -9,6 +10,7 @@ export default function GameBoard({ gameData, handleTileClick }) {
         className={`tile ${tile ? 'litTile' : 'unlitTile'}`}
         onClick={() => { handleTileClick(rowIndex, colIndex); }}
         type='button'
+        key={uniqid()}
       >
         {`${tile ? 'litTile,' : 'unlitTile,'} Row: ${rowIndex} Col: ${colIndex}`}
       </button>
