@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
+import updateBoard from './scripts/updateBoard';
 
 // Components
 import WinModal from './WinModal';
@@ -25,50 +26,20 @@ export default function Game() {
     setHasWon(true);
   };
 
-  const toggleTiles = (row, col, create = false, tempBoard, memory, count = 0) => {
-    let updatedBoard;
-    if (create) {
-      updatedBoard = tempBoard;
-    } else {
-      updatedBoard = cloneDeep(gameData);
-    }
-    updatedBoard[row][col] = (updatedBoard[row][col] + 1) % 2;
-    if (col - 1 >= 0) {
-      updatedBoard[row][col - 1] = (updatedBoard[row][col - 1] + 1) % 2;
-    }
-    if (col + 1 <= 4) {
-      updatedBoard[row][col + 1] = (updatedBoard[row][col + 1] + 1) % 2;
-    }
-    if (row + 1 <= 4) {
-      updatedBoard[row + 1][col] = (updatedBoard[row + 1][col] + 1) % 2;
-    }
-    if (row - 1 >= 0) {
-      updatedBoard[row - 1][col] = (updatedBoard[row - 1][col] + 1) % 2;
-    }
-    if (create && count < ((Math.random() * 15) + 5)) {
-      const newRow = Math.floor(Math.random() * 5);
-      const newCol = Math.floor(Math.random() * 5);
-      const newMemory = [...memory, [newRow, newCol, false]];
-      return toggleTiles(newRow, newCol, true, updatedBoard, newMemory, count + 1);
-    } if (create) {
-      setBoardMemory(memory);
-    }
-    return updatedBoard;
-  };
-
   const handleStart = () => {
     setHasWon(false);
     const row = Math.floor(Math.random() * 5);
     const col = Math.floor(Math.random() * 5);
     setMoves(0);
-    const newBoard = toggleTiles(row, col, true, cloneDeep(initialBoard), [[row, col, false]]);
-    setGameData(newBoard);
+    const newData = updateBoard(row, col, cloneDeep(initialBoard), true, cloneDeep(initialBoard), [[row, col, false]]);
+    setBoardMemory(newData.memory);
+    setGameData(newData.updatedBoard);
     setPlaying(true);
   };
 
   const handleTileClick = (row, col, hint = false) => {
     if (playing) {
-      setGameData(toggleTiles(row, col));
+      setGameData(updateBoard(row, col, cloneDeep(gameData)));
       setMoves(moves + 1);
       if (!hint) {
         setBoardMemory([...boardMemory, [row, col, true]]);
