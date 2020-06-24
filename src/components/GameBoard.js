@@ -13,7 +13,7 @@ export default function GameBoard({ gameData, handleTileClick }) {
         key={`${rowIndex}-${colIndex}`}
         data-testid={`${rowIndex}-${colIndex}`}
       >
-        {tile ? 'lit' : 'unlit'}
+        {tile === 0 ? 'unlit' : 'lit'}
       </button>
     ))
   ));

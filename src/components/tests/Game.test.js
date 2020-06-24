@@ -1,17 +1,36 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
-import util from 'util';
+import { fireEvent, render } from '@testing-library/react';
+// import util from 'util';
 import Game from '../Game';
 
+const startGame = (component) => {
+  fireEvent.click(component.getByTestId('startBtn'));
+};
+
 describe('Game', () => {
-  describe('when gameboard created', () => {
-    it('Test If 25 Tiles Create', () => {
-      const component = renderer.create(<Game />);
+  const game = render(<Game />);
 
-      const tree = component.toJSON();
-      expect(tree.children[2].children.length).toEqual(25);
+  describe('Before Game Starts', () => {
+    it('Test If All 25 Tiles Exist', () => {
+      for (let i = 0; i < 5; i += 1) {
+        for (let x = 0; x < 5; x += 1) {
+          expect(game.getByTestId(`${i}-${x}`)).toHaveTextContent('unlit');
+        }
+      }
+    });
+  });
 
-      console.log(util.inspect(tree, { showHidden: false, depth: null }));
+  describe('After Game Starts', () => {
+    beforeEach(() => {
+      startGame(game);
+    });
+
+    it('Test If Correct Tiles Are Lit', () => {
+      for (let i = 0; i < 5; i += 1) {
+        for (let x = 0; x < 5; x += 1) {
+          // expect(game.getByTestId(`${i}-${x}`)).toHaveTextContent('unlit');
+        }
+      }
     });
   });
 });
@@ -19,3 +38,4 @@ describe('Game', () => {
 // getByTestId();
 // fireEvent.click...
 // toHaveText
+// console.log(util.inspect(tree, { showHidden: false, depth: null }));

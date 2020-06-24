@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import cloneDeep from 'lodash/cloneDeep';
+import cD from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import updateBoard from './scripts/updateBoard';
 
@@ -30,8 +30,9 @@ export default function Game() {
     setHasWon(false);
     const row = Math.floor(Math.random() * 5);
     const col = Math.floor(Math.random() * 5);
+    const initMem = [[row, col, false]];
     setMoves(0);
-    const newData = updateBoard(row, col, cloneDeep(initialBoard), true, cloneDeep(initialBoard), [[row, col, false]]);
+    const newData = updateBoard(row, col, cD(initialBoard), true, cD(initialBoard), initMem);
     setBoardMemory(newData.memory);
     setGameData(newData.updatedBoard);
     setPlaying(true);
@@ -39,7 +40,7 @@ export default function Game() {
 
   const handleTileClick = (row, col, hint = false) => {
     if (playing) {
-      setGameData(updateBoard(row, col, cloneDeep(gameData)));
+      setGameData(updateBoard(row, col, cD(gameData)));
       setMoves(moves + 1);
       if (!hint) {
         setBoardMemory([...boardMemory, [row, col, true]]);
@@ -49,7 +50,7 @@ export default function Game() {
 
   const handleHint = () => {
     if (boardMemory.length > 1) {
-      const newBoardMemory = cloneDeep(boardMemory);
+      const newBoardMemory = cD(boardMemory);
       setBoardMemory(newBoardMemory);
       const lastMove = newBoardMemory.pop();
       handleTileClick(lastMove[0], lastMove[1], true);
@@ -83,6 +84,7 @@ export default function Game() {
             type='button'
             className='gameButton'
             onClick={handleHint}
+            data-testid='hintBtn'
           >
             Need A Hint?
           </button>
@@ -92,6 +94,7 @@ export default function Game() {
             type='button'
             className='gameButton'
             onClick={handleStart}
+            data-testid='startBtn'
           >
             Start
           </button>
