@@ -1,8 +1,21 @@
+body {
+    background: no-repeat center url(https://images.unsplash.com/photo-1525034687081-c702010cb70d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80);
+    background-size: cover;
+    text-align: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.App {
+    text-align: center;
+}
+
 .gameBoard {
     width: 700px;
     height: 700px;
-    background: no-repeat center url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA44QC94ng9jfrnG67qZ1x3uG_oATE2deDug&usqp=CAU);
     background-size: cover;
+    display: inline-block;
+    text-align: center;
 }
 
 .tile {
@@ -55,6 +68,7 @@
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     transition: all 0.3s;
+    text-align: center;
 }
 
 .winModal h1 {
@@ -83,11 +97,10 @@
 
 .gameButton {
   height: 50px;
-  min-width: 200px;
+  width: 400px;
   border: none;
   border-radius: 5px;
-  position: relative;
-  border-bottom: 4px solid #2b8bc6;
+  box-shadow: 3px 6px 4px -1px #2b8bc6;
   color: black;
   font-weight: 600;
   font-family: 'Open Sans', sans-serif;
@@ -95,5 +108,34 @@
   font-size: 20px;
   text-align: center;
   text-indent: 5px;
-  margin: 20px;
+  display: block;
+  margin: 30px auto;
+  outline: none;
+  transition: box-shadow .1s ease;
+}
+
+.gameButton:hover {
+    box-shadow: 3px 6px 4px -1px black;
+    transition: box-shadow .3s ease-in;
+  }
+
+.gameButton:active {
+    height: 48px;
+    width: 395px;
+    box-shadow: 1px 3px 2px -1px #2b8bc6;
+    margin: 102.5px;
+    outline: none;
+  }
+
+  .restartBtn {
+      display: absolute;
+      margin: 0;
+      text-align: center;
+      outline: none;
+      margin: 500px;
+      min-width: 300px;
+  }
+
+  .restartBtn:active {
+    outline: none;
 }
