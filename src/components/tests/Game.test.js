@@ -3,12 +3,26 @@ import { fireEvent, render } from '@testing-library/react';
 // import util from 'util';
 import Game from '../Game';
 
-const startGame = (component) => {
-  fireEvent.click(component.getByTestId('startBtn'));
-};
+jest.mock('../scripts/setupBoard', () => (
+  () => (
+    {
+      updatedBoard: [
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+      ],
+      memory: [[]],
+    }
+  )
+));
 
 describe('Game', () => {
-  const game = render(<Game />);
+  let game;
+  beforeEach(() => {
+    game = render(<Game />);
+  });
 
   describe('Before Game Starts', () => {
     it('Test If All 25 Tiles Exist', () => {
@@ -22,7 +36,7 @@ describe('Game', () => {
 
   describe('After Game Starts', () => {
     beforeEach(() => {
-      startGame(game);
+      fireEvent.click(game.getByTestId('startBtn'));
     });
 
     it('Test If Correct Tiles Are Lit', () => {

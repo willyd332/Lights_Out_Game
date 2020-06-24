@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import cD from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import updateBoard from './scripts/updateBoard';
+import setupBoard from './scripts/setupBoard';
 
 // Components
 import WinModal from './WinModal';
@@ -32,7 +33,7 @@ export default function Game() {
     const col = Math.floor(Math.random() * 5);
     const initMem = [[row, col, false]];
     setMoves(0);
-    const newData = updateBoard(row, col, cD(initialBoard), true, cD(initialBoard), initMem);
+    const newData = setupBoard(row, col, cD(initialBoard), true, cD(initialBoard), initMem);
     setBoardMemory(newData.memory);
     setGameData(newData.updatedBoard);
     setPlaying(true);
