@@ -11,7 +11,7 @@ export default function WinModal({ hasWon, handleRestart }) {
       <h1>You Win!</h1>
       <button
         type='button'
-        onClick={() => { handleRestart(); }}
+        onClick={handleRestart}
         data-testid='restartBtn'
       >
         Restart

@@ -1,6 +1,5 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-// import util from 'util';
 import Game from '../Game';
 
 const TEST_MEM = [[0, 0], [2, 2], [4, 4], [3, 1], [1, 3]];
@@ -73,9 +72,9 @@ describe('Game', () => {
 
     it('Test If Hint Button Works', () => {
       fireEvent.click(game.getByTestId(`${0}-${1}`));
-      for (let i = 0; i < TEST_MEM.length; i += 1) {
+      TEST_MEM.forEach(() => {
         fireEvent.click(game.getByTestId('hintBtn'));
-      }
+      });
       expect(game.getByTestId(`${0}-${0}`)).toHaveTextContent('lit');
       expect(game.getByTestId(`${0}-${1}`)).toHaveTextContent('lit');
       expect(game.getByTestId(`${1}-${0}`)).toHaveTextContent('lit');
@@ -83,9 +82,9 @@ describe('Game', () => {
 
     it('Test If Game Can Be Completed', () => {
       expect(game.getByTestId('winModal')).toHaveClass('winModalHidden');
-      for (let i = 0; i < TEST_MEM.length; i += 1) {
+      TEST_MEM.forEach(() => {
         fireEvent.click(game.getByTestId('hintBtn'));
-      }
+      });
       expect(game.getByTestId('winModal')).toHaveClass('winModal');
     });
 
@@ -95,11 +94,7 @@ describe('Game', () => {
       }
       fireEvent.click(game.getByTestId('restartBtn'));
       testInitTiles(game);
+      expect(game.getByTestId('winModal')).toHaveClass('winModalHidden');
     });
   });
 });
-
-// getByTestId();
-// fireEvent.click...
-// toHaveText
-// console.log(util.inspect(tree, { showHidden: false, depth: null }));
