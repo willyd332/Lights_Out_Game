@@ -31,11 +31,19 @@ body {
     background-size: contain;
     box-shadow: 5px 6px 47px -12px rgba(0,0,0,0.75);
     transition: box-shadow .1s ease;
+    transition: .5s ease;
 }
 
 .tile:focus {
     outline: none;
-  }
+}
+
+.tile:active {
+    width: 90px;
+    height: 90px;
+    margin: 24px;
+    transition: .5s ease;
+}
 
 .tile:hover {
     box-shadow: 5px 6px 41px 0px rgba(0,0,0,1);
@@ -123,7 +131,6 @@ body {
     height: 48px;
     width: 395px;
     box-shadow: 1px 3px 2px -1px #2b8bc6;
-    margin: 102.5px;
     outline: none;
   }
 
