@@ -21,7 +21,7 @@ export default function Game() {
   const [moves, setMoves] = useState(0);
   const [gameData, setGameData] = useState(initialBoard);
   const [hasWon, setHasWon] = useState(false);
-  const [boardMemory, setBoardMemory] = useState([]);
+  const [boardMemory, setBoardMemory] = useState(initialBoard);
 
   const handleWin = () => {
     setHasWon(true);
@@ -31,32 +31,30 @@ export default function Game() {
     setHasWon(false);
     const row = Math.floor(Math.random() * 5);
     const col = Math.floor(Math.random() * 5);
-    const initMem = [[row, col, false]];
     setMoves(0);
-    const newData = setupBoard(row, col, cD(initialBoard), true, cD(initialBoard), initMem);
-    setBoardMemory(newData.memory);
+    const newData = setupBoard(row, col, cD(initialBoard), true, cD(initialBoard), boardMemory);
+    setBoardMemory(newData.newMemory);
     setGameData(newData.updatedBoard);
     setPlaying(true);
   };
 
-  const handleTileClick = (row, col, hint = false) => {
+  const handleTileClick = (row, col) => {
     if (playing) {
-      setGameData(updateBoard(row, col, cD(gameData)));
+      const update = updateBoard(row, col, cD(gameData), false, null, boardMemory);
+      setGameData(update.updatedBoard);
       setMoves(moves + 1);
-      if (!hint) {
-        setBoardMemory([...boardMemory, [row, col, true]]);
-      }
+      setBoardMemory(update.newMemory);
     }
   };
 
   const handleHint = () => {
-    if (boardMemory.length > 1) {
-      const newBoardMemory = cD(boardMemory);
-      setBoardMemory(newBoardMemory);
-      const lastMove = newBoardMemory.pop();
-      handleTileClick(lastMove[0], lastMove[1], true);
-    } else {
-      handleTileClick(boardMemory[0][0], boardMemory[0][1], true);
+    for (let y = 0; y < boardMemory.length; y += 1) {
+      for (let x = 0; x < boardMemory[y].length; x += 1) {
+        if (boardMemory[y][x] === 1) {
+          handleTileClick(y, x);
+          break;
+        }
+      }
     }
   };
 
