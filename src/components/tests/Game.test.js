@@ -2,8 +2,6 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import Game from '../Game';
 
-const TEST_MEM = [[0, 0], [2, 2], [4, 4], [3, 1], [1, 3]];
-
 jest.mock('../scripts/setupBoard', () => (
   () => (
     {
@@ -14,7 +12,13 @@ jest.mock('../scripts/setupBoard', () => (
         [1, 1, 0, 0, 1],
         [0, 1, 0, 1, 1],
       ],
-      memory: [[0, 0], [2, 2], [4, 4], [3, 1], [1, 3]],
+      newMemory: [
+        [1, 0, 0, 0, 0],
+        [0, 0, 0, 1, 0],
+        [0, 0, 1, 0, 0],
+        [0, 1, 0, 0, 0],
+        [0, 0, 0, 0, 1],
+      ],
     }
   )
 ));
@@ -72,24 +76,24 @@ describe('Game', () => {
 
     it('Test If Hint Button Works', () => {
       fireEvent.click(game.getByTestId(`${0}-${1}`));
-      TEST_MEM.forEach(() => {
+      for (let i = 0; i < 5; i += 1) {
         fireEvent.click(game.getByTestId('hintBtn'));
-      });
-      expect(game.getByTestId(`${0}-${0}`)).toHaveTextContent('lit');
-      expect(game.getByTestId(`${0}-${1}`)).toHaveTextContent('lit');
-      expect(game.getByTestId(`${1}-${0}`)).toHaveTextContent('lit');
+      }
+      expect(game.getByTestId(`${4}-${4}`)).toHaveTextContent('lit');
+      expect(game.getByTestId(`${4}-${3}`)).toHaveTextContent('lit');
+      expect(game.getByTestId(`${3}-${4}`)).toHaveTextContent('lit');
     });
 
     it('Test If Game Can Be Completed', () => {
       expect(game.getByTestId('winModal')).toHaveClass('winModalHidden');
-      TEST_MEM.forEach(() => {
+      for (let i = 0; i < 5; i += 1) {
         fireEvent.click(game.getByTestId('hintBtn'));
-      });
+      }
       expect(game.getByTestId('winModal')).toHaveClass('winModal');
     });
 
     it('Test If Game Can Be Restarted', () => {
-      for (let i = 0; i < TEST_MEM.length; i += 1) {
+      for (let i = 0; i < 5; i += 1) {
         fireEvent.click(game.getByTestId('hintBtn'));
       }
       fireEvent.click(game.getByTestId('restartBtn'));
