@@ -1,10 +1,15 @@
 # Lights Out project
  
 ## Setup
+- Clone The Repo
+`git clone https://github.com/willyd332/Lights_Out_Game.git`
+- Navigate Into The Repo
+`cd Lights_Out_Game`
+- Install Dependencies
 `npm install`
- 
-## Development
+- Start The Development Server
 `npm start`
+- Open The Game In Your Browser
 > Running on http://localhost:3000
  
  
